@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Exploring Child Care Across Toronto Wards</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,700;0,900;1,300;1,700&family=Instrument+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<script type="module" src="https://public.tableau.com/javascripts/api/tableau.embedding.3.latest.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --forest:#1C3A2A;--moss:#2D5A3D;--leaf:#4A8C5C;--sage:#7AB892;
+  --mint:#B8D9C4;--cream:#F4F0E8;--gold:#C8963C;--ink:#1A2419;--white:#FDFCF8;
+}
+html,body{height:100%;overflow:hidden;}
+body{font-family:'Instrument Sans',sans-serif;background:var(--cream);color:var(--ink);display:flex;flex-direction:column;}
+
+/* ── FULL HEADER ── */
+header{
+  background:var(--forest);padding:0 40px;
+  display:flex;align-items:center;justify-content:space-between;
+  height:60px;border-bottom:3px solid var(--leaf);flex-shrink:0;
+  overflow:hidden;
+  transition:height .3s ease, opacity .3s ease;
+}
+.logo{display:flex;align-items:center;gap:12px;}
+.logo-text{font-family:'Fraunces',serif;font-size:.9rem;font-weight:700;color:var(--mint);line-height:1.2;}
+.logo-text span{display:block;font-family:'Instrument Sans',sans-serif;font-weight:300;font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--sage);}
+.header-authors{font-size:.65rem;color:var(--sage);letter-spacing:.03em;text-align:right;line-height:1.5;}
+body.dash-active header{height:0;opacity:0;pointer-events:none;border-bottom:none;}
+
+/* ── NAV TABS ── */
+nav{
+  background:var(--forest);padding:0 40px;
+  display:flex;overflow-x:auto;scrollbar-width:none;
+  border-bottom:3px solid var(--leaf);flex-shrink:0;
+}
+nav::-webkit-scrollbar{display:none;}
+.q-tab{
+  display:flex;align-items:center;gap:10px;padding:14px 22px;
+  cursor:pointer;border:none;background:transparent;color:var(--sage);
+  font-family:'Instrument Sans',sans-serif;font-size:.78rem;font-weight:500;
+  white-space:nowrap;border-bottom:3px solid transparent;margin-bottom:-3px;
+  transition:color .2s,border-color .2s,background .2s;
+}
+.q-tab:hover{color:var(--mint);background:rgba(255,255,255,.04);}
+.q-tab.active{color:var(--white);border-bottom-color:var(--gold);background:rgba(255,255,255,.06);}
+.q-num{
+  width:24px;height:24px;border-radius:50%;background:var(--moss);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Fraunces',serif;font-size:.75rem;font-weight:700;color:var(--mint);
+  flex-shrink:0;transition:background .2s;
+}
+.q-tab.active .q-num{background:var(--gold);color:var(--forest);}
+
+/* ── SLIM BAR ── */
+.slim-bar{
+  height:0;overflow:hidden;
+  background:var(--forest);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 40px;flex-shrink:0;
+  border-bottom:1px solid var(--moss);
+  transition:height .3s ease;
+}
+body.dash-active .slim-bar{height:30px;}
+.slim-title{
+  font-family:'Fraunces',serif;font-size:.7rem;font-weight:700;
+  color:var(--sage);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.slim-back{
+  font-family:'Instrument Sans',sans-serif;font-size:.65rem;font-weight:500;
+  color:var(--leaf);background:none;border:none;cursor:pointer;
+  display:flex;align-items:center;gap:5px;flex-shrink:0;margin-left:16px;
+  transition:color .15s;
+}
+.slim-back:hover{color:var(--mint);}
+
+/* ── HOME ── */
+#home{flex:1;display:flex;overflow:hidden;}
+body.dash-active #home{display:none;}
+.hero-left{
+  background:var(--forest);padding:60px 56px;
+  display:flex;flex-direction:column;justify-content:center;flex:1;
+}
+.hero-eyebrow{
+  font-size:.68rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--sage);margin-bottom:16px;display:flex;align-items:center;gap:10px;
+}
+.hero-eyebrow::before{content:'';display:block;width:28px;height:2px;background:var(--leaf);}
+h1{font-family:'Fraunces',serif;font-size:clamp(2.4rem,4vw,3.8rem);font-weight:900;line-height:1.08;letter-spacing:-.02em;color:var(--white);}
+h1 em{font-style:italic;color:var(--sage);}
+.hero-sub{margin-top:16px;font-size:.95rem;font-weight:300;line-height:1.75;color:var(--mint);max-width:400px;}
+.hero-right{background:var(--cream);padding:60px 56px;display:flex;flex-direction:column;justify-content:center;flex:1;}
+.why-label{font-family:'Fraunces',serif;font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--leaf);margin-bottom:20px;}
+.why-title{font-family:'Fraunces',serif;font-size:1.6rem;font-weight:900;color:var(--forest);line-height:1.2;margin-bottom:28px;}
+.why-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.why-card{background:var(--white);border-radius:10px;padding:20px 16px;border-left:4px solid var(--leaf);}
+.why-card-icon{font-size:1.3rem;margin-bottom:8px;}
+.why-card-title{font-family:'Fraunces',serif;font-size:.88rem;font-weight:700;color:var(--forest);margin-bottom:6px;}
+.why-card-text{font-size:.75rem;font-weight:300;line-height:1.6;color:#4A5E4F;}
+
+/* ── DASHBOARD PANELS ── */
+.panels{display:none;flex:1;overflow:hidden;position:relative;}
+body.dash-active .panels{display:block;}
+.panel{display:none;height:100%;position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;}
+.panel.active{display:flex;flex-direction:column;align-items:center;padding:16px 0 24px;}
+
+/* tableau-viz sized by JS — do not set width/height here */
+tableau-viz{display:block;flex-shrink:0;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <svg width="34" height="34" viewBox="0 0 40 40" fill="none">
+      <ellipse cx="20" cy="20" rx="14" ry="7" fill="#4A8C5C" transform="rotate(-35 20 20)"/>
+      <line x1="20" y1="10" x2="20" y2="30" stroke="#B8D9C4" stroke-width="1.5"/>
+      <line x1="20" y1="17" x2="27" y2="14" stroke="#B8D9C4" stroke-width="1"/>
+      <line x1="20" y1="22" x2="26" y2="19" stroke="#B8D9C4" stroke-width="1"/>
+      <line x1="20" y1="17" x2="13" y2="14" stroke="#B8D9C4" stroke-width="1"/>
+    </svg>
+    <div class="logo-text">
+      Exploring Child Care
+      <span>City of Toronto · 25 Wards · STA313</span>
+    </div>
+  </div>
+  <div class="header-authors">
+    Ariuntuya Ganbold · Dachan Jeong · Kevin Cheung<br/>
+    Lauren Mak · Yujin Kim · Lisa Yuen
+  </div>
+</header>
+
+<nav id="nav">
+  <button class="q-tab" data-idx="0"><span class="q-num">01</span>Where are Toronto's Youngest Residents?</button>
+  <button class="q-tab" data-idx="1"><span class="q-num">02</span>Enough Licensed Childcare Spaces?</button>
+  <button class="q-tab" data-idx="2"><span class="q-num">03</span>Are Resources Distributed Fairly?</button>
+  <button class="q-tab" data-idx="3"><span class="q-num">04</span>Do Lower-Income Wards Have Fewer Resources?</button>
+</nav>
+
+<div class="slim-bar">
+  <span class="slim-title" id="slim-title-text"></span>
+  <button class="slim-back" onclick="goHome()">← back to home</button>
+</div>
+
+<div id="home">
+  <div class="hero-left">
+    <div class="hero-eyebrow">STA313 Final Project · 2025</div>
+    <h1>Exploring<br/><em>Child Care</em><br/>Across Toronto<br/>Wards</h1>
+    <p class="hero-sub">How access to licensed child care centres and resources varies across Toronto's 25 wards — and what that means for families.</p>
+  </div>
+  <div class="hero-right">
+    <div class="why-label">Why Does This Matter?</div>
+    <div class="why-title">When resources are inaccessible, families face barriers that ripple outward.</div>
+    <div class="why-grid">
+      <div class="why-card"><div class="why-card-icon">🏙️</div><div class="why-card-title">Civic Vitality</div><div class="why-card-text">Reflects how well a city supports its community and invests in its youngest residents.</div></div>
+      <div class="why-card"><div class="why-card-icon">🌳</div><div class="why-card-title">Parks, Libraries & Rec</div><div class="why-card-text">Provide spaces for early development and community connection across all wards.</div></div>
+      <div class="why-card"><div class="why-card-icon">👶</div><div class="why-card-title">Childcare Access</div><div class="why-card-text">Enables parents to work, supporting household finances and the broader economy.</div></div>
+      <div class="why-card"><div class="why-card-icon">⚖️</div><div class="why-card-title">Equity & Access</div><div class="why-card-text">Inaccessible resources ripple outward — affecting employment, finances, and quality of life.</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="panels">
+  <div class="panel" id="panel-0">
+    <tableau-viz id="tviz-0" src="https://public.tableau.com/views/Q1_17757082068550/Question1" toolbar="bottom" hide-tabs></tableau-viz>
+  </div>
+  <div class="panel" id="panel-1">
+    <tableau-viz id="tviz-1" src="https://public.tableau.com/views/Q2_17757153193220/Question2" toolbar="bottom" hide-tabs></tableau-viz>
+  </div>
+  <div class="panel" id="panel-2">
+    <tableau-viz id="tviz-2" src="https://public.tableau.com/views/Website_17756835447500/Question32" toolbar="bottom" hide-tabs></tableau-viz>
+  </div>
+  <div class="panel" id="panel-3">
+    <tableau-viz id="tviz-3" src="https://public.tableau.com/views/Last_17757012992740/Dashboard5" toolbar="bottom" hide-tabs></tableau-viz>
+  </div>
+</div>
+
+<script>
+var TITLES = [
+  'Q1 — Where in Toronto are young children aged 0–4 concentrated?',
+  'Q2 — Do those wards have enough licensed childcare spaces to meet demand?',
+  'Q3 — Are early childhood resources distributed fairly?',
+  'Q4 — Do lower-income wards have fewer early childhood resources?'
+];
+
+// Measure available height after nav + slim-bar, then size the viz to fit
+function sizeViz(idx) {
+  var nav       = document.querySelector('nav').offsetHeight;
+  var slimBar   = document.querySelector('.slim-bar').offsetHeight;
+  var availH    = window.innerHeight - nav - slimBar;
+  var availW    = window.innerWidth;
+
+  // 90% of window width, centered, max 1300px
+  var vizW = Math.min(Math.round(availW * 0.90), 1300);
+  // Height: scale proportionally so content fits, min = availH so no scroll needed
+  var vizH = Math.round(availH * (vizW / availW));
+  // If scaled height is less than available, just fill available
+  vizH = Math.max(vizH, availH - 56);
+
+  var el = document.getElementById('tviz-' + idx);
+  if (el) {
+    el.setAttribute('width',  vizW + 'px');
+    el.setAttribute('height', vizH + 'px');
+    el.style.width  = vizW + 'px';
+    el.style.height = vizH + 'px';
+  }
+}
+
+function showDash(idx) {
+  document.body.classList.add('dash-active');
+  document.querySelectorAll('.q-tab').forEach(function(t,i){ t.classList.toggle('active', i===idx); });
+  document.querySelectorAll('.panel').forEach(function(p,i){ p.classList.toggle('active', i===idx); });
+  document.getElementById('slim-title-text').textContent = TITLES[idx];
+  // Wait for CSS transition to finish before measuring
+  setTimeout(function(){ sizeViz(idx); }, 320);
+}
+
+function goHome() {
+  document.body.classList.remove('dash-active');
+  document.querySelectorAll('.q-tab').forEach(function(t){ t.classList.remove('active'); });
+  document.querySelectorAll('.panel').forEach(function(p){ p.classList.remove('active'); });
+}
+
+document.getElementById('nav').addEventListener('click', function(e) {
+  var btn = e.target.closest('.q-tab');
+  if (!btn) return;
+  showDash(+btn.dataset.idx);
+});
+
+window.addEventListener('resize', function() {
+  var active = document.querySelector('.panel.active');
+  if (!active) return;
+  var idx = +active.id.replace('panel-','');
+  sizeViz(idx);
+});
+</script>
+</body>
+</html>
