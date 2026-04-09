@@ -102,11 +102,11 @@ h1 em{font-style:italic;color:var(--sage);}
 /* ── DASHBOARD PANELS ── */
 .panels{display:none;flex:1;overflow:hidden;position:relative;}
 body.dash-active .panels{display:block;}
-.panel{display:none;height:100%;position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;}
-.panel.active{display:flex;flex-direction:column;align-items:center;padding:16px 0 24px;}
+.panel{display:none;height:100%;position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;flex-direction:column;}
+.panel.active{display:flex;flex-direction:column;align-items:stretch;padding:0;}
 
 /* tableau-viz sized by JS — do not set width/height here */
-tableau-viz{display:block;flex-shrink:0;}
+tableau-viz{display:block;flex:1;width:100%;}
 </style>
 </head>
 <body>
@@ -173,6 +173,25 @@ tableau-viz{display:block;flex-shrink:0;}
   </div>
   <div class="panel" id="panel-3">
     <tableau-viz id="tviz-3" src="https://public.tableau.com/views/Last_17757012992740/Dashboard5" toolbar="bottom" hide-tabs></tableau-viz>
+    <div id="q4-info" style="background:var(--cream);padding:16px 40px 20px;display:flex;gap:40px;flex-shrink:0;flex-wrap:wrap;border-top:1px solid var(--mint);">
+      <div style="flex:1;min-width:180px;">
+        <div style="font-family:'Fraunces',serif;font-size:.68rem;font-weight:700;color:var(--leaf);margin-bottom:4px;text-transform:uppercase;letter-spacing:.1em;">Map Percentage</div>
+        <div style="font-size:.72rem;color:var(--moss);line-height:1.6;">The % on each ward shows that ward's share of the selected resource type out of the total citywide count — e.g. 4% means that ward holds 4% of all parks in Toronto.</div>
+      </div>
+      <div style="flex:1;min-width:180px;">
+        <div style="font-family:'Fraunces',serif;font-size:.68rem;font-weight:700;color:var(--leaf);margin-bottom:4px;text-transform:uppercase;letter-spacing:.1em;">Income Class</div>
+        <div style="font-size:.72rem;color:var(--moss);line-height:1.6;">Wards are classified as Low, Medium, or High income based on the 33rd and 67th percentile of median household income across all 25 wards.</div>
+      </div>
+      <div style="flex:1;min-width:180px;">
+        <div style="font-family:'Fraunces',serif;font-size:.68rem;font-weight:700;color:var(--leaf);margin-bottom:4px;text-transform:uppercase;letter-spacing:.1em;">Resource Gap</div>
+        <div style="font-size:.72rem;color:var(--moss);line-height:1.6;">The zero baseline is the median resource count across all 25 wards — representing the typical Toronto ward.</div>
+      </div>
+      <div style="flex:1;min-width:180px;">
+        <div style="font-family:'Fraunces',serif;font-size:.68rem;font-weight:700;color:var(--leaf);margin-bottom:4px;text-transform:uppercase;letter-spacing:.1em;">Bar Direction</div>
+        <div style="font-size:.72rem;color:var(--moss);line-height:1.6;">Bars extending right indicate above-median access. Bars extending left indicate fewer resources than the typical Toronto ward.</div>
+      </div>
+      
+    </div>
   </div>
 </div>
 
